@@ -377,11 +377,19 @@ MulticopterAttitudeControl::control_attitude(float dt)
 
 	/* get estimated and desired vehicle attitude */
 	Quatf q(_v_att.q);
-	Quatf qd(_v_att_sp.q_d);
+  Quatf qd(_v_att_sp.q_d);
 
 	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
 	q.normalize();
-	qd.normalize();
+  qd.normalize();
+
+  // Hacking from here on - based on ETHZ-ASL(https://github.com/ethz-asl/mav_px4)
+  if (_v_control_mode.flag_control_offboard_enabled) {
+    Eulerf current_state_euler(q);
+    Eulerf sp_euler(qd);
+    sp_euler(2) = current_state_euler(2);
+    qd = Quatf(sp_euler);
+  }
 
 	/* calculate reduced desired attitude neglecting vehicle's yaw to prioritize roll and pitch */
 	Vector3f e_z = q.dcm_z();
@@ -683,6 +691,12 @@ MulticopterAttitudeControl::run()
 
 				control_attitude(dt);
 
+        // Hacking from here on - based on ETHZ-ASL(https://github.com/ethz-asl/mav_px4)
+        if (_v_control_mode.flag_control_offboard_enabled) {
+          vehicle_rates_setpoint_poll();
+          _rates_sp(2) = _v_rates_sp.yaw;
+        }
+
 				/* publish attitude rates setpoint */
 				_v_rates_sp.roll = _rates_sp(0);
 				_v_rates_sp.pitch = _rates_sp(1);
@@ -696,6 +710,8 @@ MulticopterAttitudeControl::run()
 				} else if (_rates_sp_id) {
 					_v_rates_sp_pub = orb_advertise(_rates_sp_id, &_v_rates_sp);
 				}
+
+
 
 			} else {
 				/* attitude controller disabled, poll rates setpoint topic */
