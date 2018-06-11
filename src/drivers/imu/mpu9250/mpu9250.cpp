@@ -155,6 +155,9 @@ MPU9250::MPU9250(device::Device *interface, device::Device *mag_interface, const
 	_gyro_filter_x(MPU9250_GYRO_DEFAULT_RATE, MPU9250_GYRO_DEFAULT_DRIVER_FILTER_FREQ),
 	_gyro_filter_y(MPU9250_GYRO_DEFAULT_RATE, MPU9250_GYRO_DEFAULT_DRIVER_FILTER_FREQ),
 	_gyro_filter_z(MPU9250_GYRO_DEFAULT_RATE, MPU9250_GYRO_DEFAULT_DRIVER_FILTER_FREQ),
+  _accel_butter_x(),
+  _accel_butter_y(),
+  _accel_butter_z(),
 	_accel_int(1000000 / MPU9250_ACCEL_MAX_OUTPUT_RATE),
 	_gyro_int(1000000 / MPU9250_GYRO_MAX_OUTPUT_RATE, true),
 	_rotation(rotation),
@@ -1424,9 +1427,13 @@ MPU9250::measure()
 	float y_in_new = ((yraw_f * _accel_range_scale) - _accel_scale.y_offset) * _accel_scale.y_scale;
 	float z_in_new = ((zraw_f * _accel_range_scale) - _accel_scale.z_offset) * _accel_scale.z_scale;
 
-	arb.x = _accel_filter_x.apply(x_in_new);
+	/*arb.x = _accel_filter_x.apply(x_in_new);
 	arb.y = _accel_filter_y.apply(y_in_new);
-	arb.z = _accel_filter_z.apply(z_in_new);
+	arb.z = _accel_filter_z.apply(z_in_new);*/
+
+  arb.x = _accel_butter_x.apply(x_in_new);
+	arb.y = _accel_butter_y.apply(y_in_new);
+	arb.z = _accel_butter_z.apply(z_in_new);
 
 	matrix::Vector3f aval(x_in_new, y_in_new, z_in_new);
 	matrix::Vector3f aval_integrated;

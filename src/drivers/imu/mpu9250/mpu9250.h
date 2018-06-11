@@ -47,6 +47,7 @@
 #include <drivers/drv_gyro.h>
 #include <drivers/drv_mag.h>
 #include <mathlib/math/filter/LowPassFilter2p.hpp>
+#include <mathlib/math/filter/Butter2.hpp>
 #include <lib/conversion/rotation.h>
 
 #include "mag.h"
@@ -327,6 +328,11 @@ private:
 	math::LowPassFilter2p	_gyro_filter_x;
 	math::LowPassFilter2p	_gyro_filter_y;
 	math::LowPassFilter2p	_gyro_filter_z;
+  
+  // Inlcude Butterworth Filter
+  math::Butter2 _accel_butter_x;
+  math::Butter2 _accel_butter_y;
+  math::Butter2 _accel_butter_z;
 
 	Integrator		_accel_int;
 	Integrator		_gyro_int;
