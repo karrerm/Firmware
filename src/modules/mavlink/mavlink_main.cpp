@@ -2017,7 +2017,7 @@ Mavlink::task_main(int argc, char *argv[])
 		configure_stream("EXTENDED_SYS_STATE", 1.0f);
 		configure_stream("GLOBAL_POSITION_INT", 5.0f);
 		configure_stream("GPS_RAW_INT", 1.0f);
-		configure_stream("HIGHRES_IMU", 1.5f);
+		configure_stream("HIGHRES_IMU", 100.0f);
 		configure_stream("HOME_POSITION", 0.5f);
 		configure_stream("LOCAL_POSITION_NED", 1.0f);
 		configure_stream("NAMED_VALUE_FLOAT", 1.0f);
@@ -2052,7 +2052,7 @@ Mavlink::task_main(int argc, char *argv[])
 		configure_stream("EXTENDED_SYS_STATE", 5.0f);
 		configure_stream("GLOBAL_POSITION_INT", 50.0f);
 		configure_stream("GPS_RAW_INT");
-		configure_stream("HIGHRES_IMU", 50.0f);
+		configure_stream("HIGHRES_IMU", 100.0f);
 		configure_stream("HOME_POSITION", 0.5f);
 		configure_stream("LOCAL_POSITION_NED", 30.0f);
 		configure_stream("NAMED_VALUE_FLOAT", 10.0f);
@@ -2113,7 +2113,7 @@ Mavlink::task_main(int argc, char *argv[])
 		configure_stream("ESTIMATOR_STATUS", 5.0f);
 		configure_stream("EXTENDED_SYS_STATE", 2.0f);
 		configure_stream("GLOBAL_POSITION_INT", 10.0f);
-		configure_stream("HIGHRES_IMU", 50.0f);
+		configure_stream("HIGHRES_IMU", 100.0f);
 		configure_stream("HOME_POSITION", 0.5f);
 		configure_stream("LOCAL_POSITION_NED", 30.0f);
 		configure_stream("MANUAL_CONTROL", 5.0f);
