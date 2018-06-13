@@ -704,12 +704,15 @@ MulticopterAttitudeControl::run()
 				_v_rates_sp.thrust = _thrust_sp;
 				_v_rates_sp.timestamp = hrt_absolute_time();
 
-				if (_v_rates_sp_pub != nullptr) {
-					orb_publish(_rates_sp_id, _v_rates_sp_pub, &_v_rates_sp);
+        // Don't republish if in offboard mode, since we send the yaw rate here.
+        if (!_v_control_mode.flag_control_offboard_enabled) {
+          if (_v_rates_sp_pub != nullptr) {
+            orb_publish(_rates_sp_id, _v_rates_sp_pub, &_v_rates_sp);
 
-				} else if (_rates_sp_id) {
-					_v_rates_sp_pub = orb_advertise(_rates_sp_id, &_v_rates_sp);
-				}
+          } else if (_rates_sp_id) {
+            _v_rates_sp_pub = orb_advertise(_rates_sp_id, &_v_rates_sp);
+          }
+        }
 
 
 
